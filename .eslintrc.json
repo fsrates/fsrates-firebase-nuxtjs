@@ -1,0 +1,21 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "parser": "@babel/eslint-parser",
+    "requireConfigFile": false
+  },
+  "extends": ["@nuxtjs", "plugin:nuxt/recommended"],
+  "plugins": ["vue", "promise"],
+  "rules": {
+    "no-undef": "off",
+    "quotes": [1, "single"],
+    "space-before-function-paren": "off",
+    "comma-dangle": 1,
+    "semi": 0,
+    "vue/html-self-closing": 0
+  }
+}
