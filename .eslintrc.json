@@ -11,7 +11,7 @@
   "extends": ["@nuxtjs", "plugin:nuxt/recommended"],
   "plugins": ["vue", "promise"],
   "rules": {
-    "no-undef": "off",
+    "no-undef": 0,
     "quotes": [1, "single"],
     "space-before-function-paren": "off",
     "comma-dangle": 1,
