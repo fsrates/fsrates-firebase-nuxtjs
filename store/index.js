@@ -4,6 +4,7 @@ import {
   query,
   orderByChild,
   equalTo,
+  child,
   onValue
 } from '@firebase/database';
 import { auth, database } from '../plugins/firebase-client';
@@ -41,6 +42,8 @@ export const actions = {
     }
     if (ctx.res && ctx.res.locals && ctx.res.locals.user) {
       await dispatch('onAuthStateChanged');
+      await dispatch('onOrders');
+      await dispatch('onUsersListener');
     }
   },
   onAuthStateChanged({ commit }) {
@@ -67,8 +70,8 @@ export const actions = {
     const uid = auth.currentUser.uid;
     const db = ref(database, '/orders');
     const queryRef = query(db, orderByChild('userId') && equalTo(uid));
-    const orders = [];
     try {
+      const ordersSnap = [];
       const snaps = await get(queryRef);
       snaps.forEach((snap) => {
         const order = getOrder(
@@ -82,12 +85,33 @@ export const actions = {
           snap.val().date,
           snap.val().userId
         );
-        orders.push(order);
+        ordersSnap.push(order);
       });
+      const orders = getOrders(ordersSnap);
       commit('SET_ORDERS', { orders });
+      return orders;
     } catch (e) {
       console.log(e);
       commit('SET_ORDERS');
     }
+  },
+  onUsersListener({ commit }) {
+    if (!auth.currentUser) {
+      return;
+    }
+    const uid = auth.currentUser.uid;
+    const db = ref(database);
+    const usersRef = child(db, '/users/' + uid);
+    return new Promise((resolve) => {
+      onValue(usersRef, (userSnap) => {
+        if (userSnap.exists()) {
+          commit('SET_USER', { id: uid, user: userSnap.val() });
+          resolve(userSnap.val());
+        }
+        if (!userSnap) {
+          resolve();
+        }
+      });
+    });
   }
 };
