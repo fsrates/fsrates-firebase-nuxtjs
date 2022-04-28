@@ -60,9 +60,19 @@ export const actions = {
   },
   async onOrders({ commit, state }) {
     if (state.authUser.uid === null || state.authUser.uid === undefined) {
-      commit('RESET_STORE', null);
+      commit('SET_ORDERS');
       return;
     }
     const uid = auth.currentUser.uid;
+    const db = ref(database, '/orders');
+    const queryRef = query(db, orderByChild('userId') && equalTo(uid));
+    const orders = [];
+    try {
+      const snaps = await get(queryRef);
+      snaps.forEach();
+    } catch (e) {
+      console.log(e);
+      commit('SET_ORDERS');
+    }
   }
 };
