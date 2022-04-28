@@ -17,8 +17,12 @@
           <v-spacer></v-spacer>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="createOrder()"> Submit </v-btn>
-          <v-btn color="warning" @click="resetData()"> Reset </v-btn>
+          <v-btn color="primary" align="start" @click="fetchData()">
+            Submit
+          </v-btn>
+          <v-btn color="warning" align="end" @click="resetData()">
+            Reset
+          </v-btn>
         </v-card-actions>
       </v-card>
       <v-spacer></v-spacer>
@@ -27,15 +31,15 @@
 </template>
 
 <script>
-import { ref, get, query, orderByChild, equalTo } from "firebase/database";
-import { auth, database } from "../plugins/firebase-client";
+import { ref, get, query, orderByChild, equalTo } from 'firebase/database';
+import { auth, database } from '../plugins/firebase-client';
 export default {
-  name: "NeworderPage",
+  name: 'NeworderPage',
 
   filters: {
     decimal(val) {
       return Number.parseFloat(val).toFixed(2);
-    },
+    }
   },
 
   async asyncData({ app, error }) {
@@ -43,44 +47,17 @@ export default {
       return;
     }
     const uid = auth.currentUser.uid;
-    const db = ref(database, "/orders");
-    const queryRef = query(db, orderByChild("userId") && equalTo(uid));
-    const orders = [];
+    const db = ref(database, '/orders');
+    const queryRef = query(db, orderByChild('userId') && equalTo(uid));
+    const ordersSnap = [];
     try {
-      const snap = await get(queryRef);
-      for (let i in snap) {
-        const id = snap[i].key;
-        const {
-          type,
-          title,
-          amount,
-          price,
-          total,
-          status,
-          date,
-          userId,
-        } = snap[i].val;
-        const order = Object.assign(
-          {},
-          {
-            id,
-            type,
-            title,
-            amount,
-            price,
-            total,
-            status,
-            date,
-            userId,
-          }
-        );
-        orders.push(order);
-      }
+      const snaps = await get(queryRef);
+      snaps.forEach((snap) => {});
     } catch (e) {
       console.error(e);
     }
     return {
-      orders,
+      orders
     };
   },
 
@@ -88,21 +65,21 @@ export default {
     return {
       headers: [
         {
-          text: "Date",
-          value: "date",
+          text: 'Date',
+          value: 'date'
         },
-        { text: "Type", value: "type" },
-        { text: "Title", value: "title" },
-        { text: "Amount", value: "amount" },
-        { text: "Price", value: "price" },
-        { text: "Total", value: "total" },
-        { text: "Status", value: "status" },
-      ],
+        { text: 'Type', value: 'type' },
+        { text: 'Title', value: 'title' },
+        { text: 'Amount', value: 'amount' },
+        { text: 'Price', value: 'price' },
+        { text: 'Total', value: 'total' },
+        { text: 'Status', value: 'status' }
+      ]
     };
   },
 
   computed: {},
 
-  methods: {},
+  methods: {}
 };
 </script>
