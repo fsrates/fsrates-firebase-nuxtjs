@@ -35,9 +35,25 @@ export function getOrder(
   return order;
 }
 
+/**
+ * Get Orders's data.
+ * @param {*} ordersSnap
+ * @returns
+ */
 export function getOrders(ordersSnap) {
   const orders = [];
   for (const i in ordersSnap) {
-    const order = getOrder(ordersSnap[i].id, ordersSnap[i].type);
+    const order = getOrder(
+      ordersSnap[i].id,
+      ordersSnap[i].type,
+      ordersSnap[i].title,
+      ordersSnap[i].amount,
+      ordersSnap[i].price,
+      ordersSnap[i].total,
+      ordersSnap[i].status,
+      ordersSnap[i].userId
+    );
+    orders.push(order);
   }
+  return orders;
 }

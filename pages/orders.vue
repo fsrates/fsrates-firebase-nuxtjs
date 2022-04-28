@@ -33,6 +33,8 @@
 <script>
 import { ref, get, query, orderByChild, equalTo } from 'firebase/database';
 import { auth, database } from '../plugins/firebase-client';
+import { getOrder, getOrders } from '../utils/utils';
+
 export default {
   name: 'NeworderPage',
 
@@ -46,18 +48,31 @@ export default {
     if (!auth.currentUser) {
       return;
     }
-    const uid = auth.currentUser.uid;
+    const uid = 'gceECw3fyZgJth0FyKn4vRRxCq02';
     const db = ref(database, '/orders');
     const queryRef = query(db, orderByChild('userId') && equalTo(uid));
     const ordersSnap = [];
     try {
       const snaps = await get(queryRef);
-      snaps.forEach((snap) => {});
+      snaps.forEach((snap) => {
+        const order = getOrder(
+          snap.key,
+          snap.val().type,
+          snap.val().title,
+          snap.val().amount,
+          snap.val().price,
+          snap.val().total,
+          snap.val().status,
+          snap.val().date,
+          snap.val().userId
+        );
+        ordersSnap.push(order);
+      });
     } catch (e) {
       console.error(e);
     }
     return {
-      orders
+      ordersSnap
     };
   },
 
@@ -74,12 +89,9 @@ export default {
         { text: 'Price', value: 'price' },
         { text: 'Total', value: 'total' },
         { text: 'Status', value: 'status' }
-      ]
+      ],
+      orders: getOrders(this.ordersSnap)
     };
-  },
-
-  computed: {},
-
-  methods: {}
+  }
 };
 </script>
