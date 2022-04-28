@@ -7,6 +7,7 @@ import {
   onValue
 } from '@firebase/database';
 import { auth, database } from '../plugins/firebase-client';
+import { getOrder, getOrders } from '../utils/utils';
 
 export const state = () => ({
   authUser: null,
@@ -69,7 +70,21 @@ export const actions = {
     const orders = [];
     try {
       const snaps = await get(queryRef);
-      snaps.forEach();
+      snaps.forEach((snap) => {
+        const order = getOrder(
+          snap.key,
+          snap.val().type,
+          snap.val().title,
+          snap.val().amount,
+          snap.val().price,
+          snap.val().total,
+          snap.val().status,
+          snap.val().date,
+          snap.val().userId
+        );
+        orders.push(order);
+      });
+      commit('SET_ORDERS', { orders });
     } catch (e) {
       console.log(e);
       commit('SET_ORDERS');

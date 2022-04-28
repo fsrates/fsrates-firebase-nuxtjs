@@ -1,11 +1,11 @@
 import colors from 'vuetify/es5/util/colors';
+import env from 'dotenv';
+env.config();
 
 export default {
   mode: 'universal',
 
   target: 'static',
-
-  ssr: false,
 
   publicRuntimeConfig: {
     apiKey: 'AIzaSyCado-rFkBejI3CB6s1lR9xLizgv5MYGJg',
@@ -111,7 +111,7 @@ export default {
     icon: false,
     workbox: {
       importScripts: ['/firebase-auth-sw.js'],
-      dev: process.env.NODE_ENV === 'development'
+      dev: 'development'
     }
   },
 
