@@ -115,3 +115,12 @@ export const actions = {
     });
   }
 };
+
+export const getters = {
+  isLoggedIn(state) {
+    return state.authUser.uid !== null && state.authUser.uid !== undefined;
+  },
+  allOrders(state) {
+    return state.orders;
+  }
+};

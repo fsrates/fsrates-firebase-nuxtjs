@@ -51,28 +51,24 @@ export default {
     const uid = 'gceECw3fyZgJth0FyKn4vRRxCq02';
     const db = ref(database, '/orders');
     const queryRef = query(db, orderByChild('userId') && equalTo(uid));
-    const ordersSnap = [];
+    let snaps;
     try {
-      const snaps = await get(queryRef);
-      snaps.forEach((snap) => {
-        const order = getOrder(
-          snap.key,
-          snap.val().type,
-          snap.val().title,
-          snap.val().amount,
-          snap.val().price,
-          snap.val().total,
-          snap.val().status,
-          snap.val().date,
-          snap.val().userId
-        );
-        ordersSnap.push(order);
-      });
+      snaps = await get(queryRef);
     } catch (e) {
       console.error(e);
     }
     return {
-      ordersSnap
+      ordersSnap: getOrder(
+        snaps.key,
+        snaps.val().type,
+        snaps.val().title,
+        snaps.val().amount,
+        snaps.val().price,
+        snaps.val().total,
+        snaps.val().status,
+        snaps.val().date,
+        snaps.val().userId
+      )
     };
   },
 
