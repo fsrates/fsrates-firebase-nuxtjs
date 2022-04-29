@@ -48,6 +48,8 @@ import { getOrder } from '../../utils/utils';
 export default {
   name: 'OrdersPage',
 
+  middleware: 'auth',
+
   data() {
     return {
       orders: [],
@@ -92,8 +94,7 @@ export default {
   },
 
   created() {
-    const v = this;
-    v.orders = v.readOrder();
+    this.orders = this.readOrder();
   }
 };
 </script>
