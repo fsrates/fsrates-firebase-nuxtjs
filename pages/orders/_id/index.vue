@@ -1,8 +1,11 @@
 <template>
-  <div id="orders-id-page" v-if="isLoggedIn && authUser">
+  <div v-if="isLoggedIn && authUser">
     This is Order Page
-    <p v-if="order && order.userId === `${authUser.uid}`">
+    <p>
       {{ order }}
+    </p>
+    <p>
+      <nuxt-link to="/orders"> Go Orders Dashboad </nuxt-link>
     </p>
   </div>
 </template>
@@ -26,7 +29,7 @@ export default {
       console.error(e);
     }
     return {
-      orders: snap.val()
+      order: snap.val()
     };
   },
 

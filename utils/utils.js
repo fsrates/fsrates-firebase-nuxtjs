@@ -1,16 +1,3 @@
-/**
- * Get Order 's data.
- * @param {*} id
- * @param {*} type
- * @param {*} title
- * @param {*} amount
- * @param {*} price
- * @param {*} total
- * @param {*} status
- * @param {*} date
- * @param {*} userId
- * @return
- */
 export function getOrder(
   id,
   type,
@@ -35,11 +22,6 @@ export function getOrder(
   return order;
 }
 
-/**
- * Get Orders's data.
- * @param {*} ordersSnap
- * @returns
- */
 export function getOrders(ordersSnap) {
   const orders = [];
   for (const i in ordersSnap) {

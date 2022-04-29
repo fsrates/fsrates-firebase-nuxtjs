@@ -86,10 +86,13 @@
 </template>
 
 <script>
-import { ref, push, update } from 'firebase/database';
+import { mapGetters, mapState } from 'vuex';
+import { ref, push, update } from '@firebase/database';
 import { auth, database } from '../plugins/firebase-client';
 export default {
   name: "NeworderPage",
+
+  middleware: 'auth',
 
   data() {
     return {
@@ -114,7 +117,10 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapState(['authUser']),
+    ...mapGetters(['isLoggedIn'])
+  },
 
   methods: {
     getPrice() {
@@ -263,15 +269,16 @@ export default {
           price: this.order.price,
           total: this.order.total,
           status: 'Pending',
-          date: Date.now()
+          date: Date.now(),
+          userId: uid
         };
         const updates = {};
         updates['/orders/' + orderId] = order;
-        updates['/user-orders/' + uid + '/' + orderId] = order;
+        updates['/user-orders/' + uid + '/pending'] = { orderId: orderId };
         await update(db, updates);
         alert('Success to create new order id: ' + orderId);
         this.resetData();
-        this.$router.push(`/user-orders/${uid}/${orderId}`);
+        this.$router.push(`/orders/${orderId}`);
       } catch (e) {
         alert(e);
       }
