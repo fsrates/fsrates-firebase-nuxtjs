@@ -1,19 +1,16 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="12" sm="6" md="8" lg="8">
-      <v-flex>
-        <v-card>
-          <v-card-title> Order </v-card-title>
-          <v-divider></v-divider>
-          <v-card-subtitle> Order page </v-card-subtitle>
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-spacer></v-spacer>
-            <OrdersList :orders="orders || []" />
-            <v-spacer></v-spacer>
-          </v-card-text>
-        </v-card>
-      </v-flex>
+  <v-row justify="center" pt-8>
+    <v-col cols="12" lg="10">
+      <v-card>
+        <v-card-title> Order </v-card-title>
+        <v-card-subtitle> Order page </v-card-subtitle>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-spacer></v-spacer>
+          <OrdersList :orders="orders || []" />
+          <v-spacer></v-spacer>
+        </v-card-text>
+      </v-card>
     </v-col>
   </v-row>
 </template>
@@ -31,26 +28,22 @@ export default {
 
   middleware: 'auth',
 
-  async asyncData({ $axios, store, error }) {
+  async asyncData({ app, store, error }) {
     const uid = store.state.authUser.uid;
-    const token = store.state.authUser.idToken;
-    const config = {
-      method: 'GET',
-      url: `https://fs-exchange-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?orderBy="userId"&equalTo="${uid}"`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    };
+    const db = app.$fire.database
+      .ref('orders')
+      .orderByChild('userId')
+      .equalTo(uid);
     let response;
     try {
-      response = await $axios.$get(config);
+      response = await db.get();
     } catch (e) {
       console.error(e);
       alert(e);
     }
     return {
-      orders: response.data
+      response,
+      orders: response.val()
     };
   },
 

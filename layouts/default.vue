@@ -231,4 +231,22 @@ a {
 .bg-white {
   background-color: white;
 }
+
+.text-start {
+  text-align: start;
+  padding: auto auto;
+  vertical-align: middle;
+}
+
+.text-end {
+  text-align: end;
+  padding: auto auto;
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+  padding: auto auto;
+  vertical-align: middle;
+}
 </style>

@@ -18,6 +18,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/firebase": "^8.2.2",
     "@nuxtjs/pwa": "^3.3.5",
+    "dayjs": "^1.11.1",
     "dotenv": "^16.0.0",
     "firebase": "^9.6.11",
     "nuxt": "^2.15.0",
