@@ -43,10 +43,6 @@ export const actions = {
     if (ctx.res && ctx.res.locals && ctx.res.locals.user) {
       await dispatch('onAuthStateChanged');
     }
-    if (auth && auth.currentUser) {
-      await dispatch('onOrders');
-      await dispatch('onUsersListener');
-    }
   },
   onAuthStateChanged({ commit }) {
     auth.onAuthStateChanged(async (user) => {
@@ -69,9 +65,9 @@ export const actions = {
       commit('SET_ORDERS');
       return;
     }
-    const uid = auth.currentUser.uid;
+    const uid = state.authUser.uid;
     const db = ref(database, '/orders');
-    const queryRef = query(db, orderByChild('userId') && equalTo(uid));
+    const queryRef = query(db, [orderByChild('/userId') && equalTo(uid)]);
     try {
       const ordersSnap = [];
       const snaps = await get(queryRef);

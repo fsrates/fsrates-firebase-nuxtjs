@@ -48,8 +48,21 @@ export default {
     return {
       email: '',
       password: '',
-      authUser: null
+      authUser: {}
     };
+  },
+
+  mounted() {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const idToken = await user.getIdToken(true);
+        const { uid, email, displayName, emailVerified, photoURL } = user;
+        this.$store.commit('SET_AUTH_USER', {
+          authUser: { uid, email, displayName, emailVerified, photoURL },
+          idToken
+        });
+      }
+    });
   },
 
   methods: {
@@ -73,6 +86,23 @@ export default {
     resetData() {
       this.email = '';
       this.password = '';
+    },
+    getUser() {
+      if (!auth.currentUser) {
+        this.authUser = Object.assign({}, {});
+        return;
+      }
+      const {
+        uid,
+        email,
+        displayName,
+        emailVerified,
+        photoURL
+      } = auth.currentUser;
+      this.authUser = Object.assign(
+        {},
+        { uid, email, displayName, emailVerified, photoURL }
+      );
     }
   }
 };

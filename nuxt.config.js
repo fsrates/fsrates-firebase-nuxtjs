@@ -72,7 +72,9 @@ export default {
     '@nuxtjs/dotenv'
   ],
 
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost:3000'
+  },
 
   firebase: {
     config: {

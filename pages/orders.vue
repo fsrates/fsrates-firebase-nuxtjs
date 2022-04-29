@@ -9,24 +9,7 @@
           <v-divider></v-divider>
           <v-card-text>
             <v-spacer></v-spacer>
-            <v-simple-table>
-              <tbody>
-                <tr v-for="order in orders" :key="order.id">
-                  <td>See Order detail</td>
-                  <td v-if="order.userId === `${authUser.uid}`">
-                    {{ order.amount }}
-                  </td>
-                  <td v-if="order.userId === `${authUser.uid}`">
-                    <nuxt-link
-                      :to="{ name: 'orders-id', params: { id: order.id } }"
-                    >
-                      {{ order.status }}
-                    </nuxt-link>
-                  </td>
-                </tr>
-              </tbody>
-            </v-simple-table>
-            {{ orders }}
+            <OrdersList :orders="orders || []" />
             <v-spacer></v-spacer>
           </v-card-text>
         </v-card>
@@ -37,44 +20,37 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { ref, get, query, orderByChild, equalTo } from 'firebase/database';
-import { database } from '../plugins/firebase-client';
-import { getOrder, getOrders } from '../utils/utils';
+import OrdersList from '../components/OrdersList.vue';
 
 export default {
   name: 'OrdersPage',
 
+  components: {
+    OrdersList
+  },
+
   middleware: 'auth',
 
-  async asyncData({ app, store, error }) {
+  async asyncData({ $axios, store, error }) {
     const uid = store.state.authUser.uid;
-    const db = ref(database, '/orders');
-    const qs = query(db, orderByChild('/userId') && equalTo(uid));
-    let orders;
+    const token = store.state.authUser.idToken;
+    const config = {
+      method: 'GET',
+      url: `https://fs-exchange-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json?orderBy="userId"&equalTo="${uid}"`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    };
+    let response;
     try {
-      const ordersSnap = [];
-      const snap = await get(qs);
-      snap.forEach((chilSnap) => {
-        const order = getOrder(
-          chilSnap.key,
-          chilSnap.val().type,
-          chilSnap.val().title,
-          chilSnap.val().amount,
-          chilSnap.val().price,
-          chilSnap.val().total,
-          chilSnap.val().status,
-          chilSnap.val().date,
-          chilSnap.val().userId
-        );
-        ordersSnap.push(order);
-      });
-      orders = getOrders(ordersSnap);
+      response = await $axios.$get(config);
     } catch (e) {
       console.error(e);
       alert(e);
     }
     return {
-      orders
+      orders: response.data
     };
   },
 
