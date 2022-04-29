@@ -7,8 +7,6 @@ export default {
 
   target: 'static',
 
-  ssr: true,
-
   publicRuntimeConfig: {
     apiKey: 'AIzaSyCado-rFkBejI3CB6s1lR9xLizgv5MYGJg',
     authDomain: 'fs-exchange.firebaseapp.com',

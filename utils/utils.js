@@ -57,3 +57,22 @@ export function getOrders(ordersSnap) {
   }
   return orders;
 }
+
+export function buildOrder(snaps) {
+  const ordersSnap = [];
+  for (const i in snaps) {
+    const order = getOrder(
+      snaps[i].key,
+      snaps[i].type,
+      snaps[i].title,
+      snaps[i].amount,
+      snaps[i].price,
+      snaps[i].total,
+      snaps[i].status,
+      snaps[i].date,
+      snaps[i].userId
+    );
+    ordersSnap.push(order);
+  }
+  return ordersSnap;
+}

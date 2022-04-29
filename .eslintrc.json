@@ -16,6 +16,7 @@
     "space-before-function-paren": "off",
     "comma-dangle": 1,
     "semi": 0,
-    "vue/html-self-closing": 0
+    "vue/html-self-closing": 0,
+    "no-console": 0
   }
 }

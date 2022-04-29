@@ -42,6 +42,8 @@ export const actions = {
     }
     if (ctx.res && ctx.res.locals && ctx.res.locals.user) {
       await dispatch('onAuthStateChanged');
+    }
+    if (auth && auth.currentUser) {
       await dispatch('onOrders');
       await dispatch('onUsersListener');
     }
@@ -118,7 +120,11 @@ export const actions = {
 
 export const getters = {
   isLoggedIn(state) {
-    return state.authUser.uid !== null && state.authUser.uid !== undefined;
+    try {
+      return state.authUser !== null && state.authUser !== undefined;
+    } catch {
+      return false;
+    }
   },
   allOrders(state) {
     return state.orders;

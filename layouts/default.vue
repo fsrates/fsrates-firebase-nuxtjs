@@ -27,7 +27,7 @@
     <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
-        <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
+        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
       <v-btn icon @click.stop="clipped = !clipped">
         <v-icon>mdi-application</v-icon>
@@ -54,6 +54,28 @@
           </v-list-item-action>
           <v-list-item-title>Switch drawer (click me)</v-list-item-title>
         </v-list-item>
+        <v-list-item
+          v-if="isLoggedIn"
+          nuxt
+          :to="{ name: 'users-id', params: { id: authUser.uid } }"
+          router
+          exact
+        >
+          <v-list-item-action>
+            <v-icon> mdi-plus </v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title> User Dashboad </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item v-if="isLoggedIn" @click="signout">
+          <v-list-item-action>
+            <v-icon> mdi-account-arrow-left </v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title> Logout </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-footer :absolute="!fixed" app>
@@ -67,8 +89,11 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+import { auth } from '../plugins/firebase-client';
+
 export default {
-  name: "DefaultLayout",
+  name: 'DefaultLayout',
 
   data() {
     return {
@@ -77,24 +102,24 @@ export default {
       fixed: false,
       items: [
         {
-          icon: "mdi-apps",
-          title: "Welcome",
-          to: "/",
+          icon: 'mdi-apps',
+          title: 'Welcome',
+          to: '/'
         },
         {
-          icon: "mdi-chart-bubble",
-          title: "order",
-          to: "/neworder",
+          icon: 'mdi-chart-bubble',
+          title: 'order',
+          to: '/neworder'
         },
         {
-          icon: "mdi-account-plus",
-          title: "Register",
-          to: "/register",
+          icon: 'mdi-account-plus',
+          title: 'Register',
+          to: '/register'
         },
         {
-          icon: "mdi-account-arrow-right",
-          title: "Login",
-          to: "/login",
+          icon: 'mdi-account-arrow-right',
+          title: 'Login',
+          to: '/login'
         },
         {
           icon: 'mdi-plus',
@@ -105,48 +130,58 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: "FS Exchanger",
+      title: 'FS Exchanger'
     };
   },
 
   head() {
     return {
       link: [
-        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/icon?family=Material+Icons",
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/icon?family=Material+Icons'
         },
         {
-          rel: "stylesheet",
+          rel: 'stylesheet',
+          href: 'https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css'
+        },
+        {
+          rel: 'stylesheet',
           href:
-            "https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css",
+            'https://fonts.googleapis.com/css?family=Lobster&effect=shadow-multiple'
         },
         {
-          rel: "stylesheet",
-          href:
-            "https://fonts.googleapis.com/css?family=Lobster&effect=shadow-multiple",
-        },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css?family=Roboto",
-        },
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css?family=Roboto'
+        }
       ],
-      script: [{ src: "https://code.getmdl.io/1.1.3/material.min.js" }],
+      script: [{ src: 'https://code.getmdl.io/1.1.3/material.min.js' }]
     };
   },
+
+  computed: {
+    ...mapGetters(['isLoggedIn']),
+    ...mapState(['authUser'])
+  },
+
+  methods: {
+    async signout() {
+      await auth.signOut();
+    }
+  }
 };
 </script>
 
 <style>
-@import "https://fonts.googleapis.com/css?family=Roboto";
-@import "https://fonts.googleapis.com/css?family=Lobster&effect=shadow-multiple";
+@import 'https://fonts.googleapis.com/css?family=Roboto';
+@import 'https://fonts.googleapis.com/css?family=Lobster&effect=shadow-multiple';
 *,
 html,
 body {
   box-sizing: border-box;
   font-size: medium;
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 a {
@@ -182,7 +217,7 @@ a {
 }
 
 .lobster {
-  font-family: "Lobster", sans-serif;
+  font-family: 'Lobster', sans-serif;
   word-spacing: 1.5px;
   font-weight: border;
 }
