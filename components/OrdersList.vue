@@ -38,10 +38,6 @@ export default {
     orders: {
       type: Array,
       default: () => []
-    },
-    orderId: {
-      type: String,
-      default: ''
     }
   },
   data() {

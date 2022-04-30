@@ -264,7 +264,7 @@ export default {
         await update(db, updates);
         alert('Success to create new order id: ' + orderId);
         this.resetData();
-        this.$router.push(`/orders/${orderId}`);
+        this.$router.push(`/orders`);
       } catch (e) {
         alert(e);
       }

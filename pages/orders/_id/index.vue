@@ -9,49 +9,35 @@
           <v-spacer></v-spacer>
           <v-simple-table>
             <tr>
-              <th class="text-end">
-                วันที่:
-              </th>
+              <th class="text-end">วันที่:</th>
               <td class="text-start">
                 {{ dateFormat(order.date) }}
               </td>
             </tr>
             <tr>
-              <th class="text-end">
-                รายละเอียด:
-              </th>
+              <th class="text-end">รายละเอียด:</th>
               <td class="text-start">
                 {{ toThai(order.type) }} - {{ converTitle(order.title) }}
               </td>
             </tr>
             <tr>
-              <th class="text-end">
-                จำนวน (ดอลลาร์):
-              </th>
-              <td class="text-start">
-                $ {{ decimal(order.amount) }}
-              </td>
+              <th class="text-end">จำนวน (ดอลลาร์):</th>
+              <td class="text-start">$ {{ decimal(order.amount) }}</td>
             </tr>
             <tr>
-              <th class="text-end">
-                ราคาต่อหน่วย (บาท):
-              </th>
+              <th class="text-end">ราคาต่อหน่วย (บาท):</th>
               <td class="text-start">
                 {{ decimal(order.price) }}
               </td>
             </tr>
             <tr>
-              <th class="text-end">
-                ยอดสุทธิ (บาท):
-              </th>
+              <th class="text-end">ยอดสุทธิ (บาท):</th>
               <td class="text-start">
                 {{ decimal(order.total) }}
               </td>
             </tr>
             <tr>
-              <th class="text-end">
-                สถานะ:
-              </th>
+              <th class="text-end">สถานะ:</th>
               <td class="text-start">
                 {{ convertStatus(order.status) }}
               </td>
@@ -66,21 +52,19 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex';
-import { ref, get } from 'firebase/database';
 import dayjs from 'dayjs';
-import { database } from '../../../plugins/firebase-client';
 
 export default {
   name: 'OrdersIdPage',
 
   filters: {
-    dateFormat (val) {
+    dateFormat(val) {
       return dayjs(val).format('DD/MM/YYYY HH:mm');
     },
-    decimal (val) {
+    decimal(val) {
       return Number.parseFloat(val).toFixed(2);
     },
-    toThai (v) {
+    toThai(v) {
       const str = String(v);
       if (str === 'sell') {
         return 'รายการแจ้งขาย';
@@ -88,7 +72,7 @@ export default {
         return 'รายการแจ้งซื้อ';
       }
     },
-    convertStatus (v) {
+    convertStatus(v) {
       const str = String(v);
       if (str === 'Pending') {
         return 'รับคำสั่งแล้ว';
@@ -104,7 +88,7 @@ export default {
         return 'ตีกลับแล้ว';
       }
     },
-    converTitle (v) {
+    converTitle(v) {
       const str = String(v);
       if (str === 'paypals') {
         return 'PAYPAL';
@@ -123,10 +107,10 @@ export default {
   middleware: 'auth',
 
   async asyncData({ app, params, error }) {
-    const db = ref(database, `/orders/${params.id}`);
+    const db = app.$fire.database.ref('orders').child(params.id);
     let snap;
     try {
-      snap = await get(db);
+      snap = await db.get();
     } catch (e) {
       console.error(e);
     }
