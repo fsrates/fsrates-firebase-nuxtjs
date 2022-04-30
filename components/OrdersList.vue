@@ -5,7 +5,7 @@
         {{ header.text }}
       </th>
     </tr>
-    <tr v-for="order in orders" :key="order">
+    <tr v-for="(order, id) in orders" :key="id">
       <td class="text-center medium">
         {{ order.type }}
       </td>
@@ -22,7 +22,9 @@
         {{ dateFormat(order.date) }}
       </td>
       <td class="text-center medium">
-        {{ order.userId }}
+        <router-link :to="{ name: 'orders-id', params: { id: id } }">
+          see detail
+        </router-link>
       </td>
     </tr>
   </v-simple-table>
@@ -36,6 +38,10 @@ export default {
     orders: {
       type: Array,
       default: () => []
+    },
+    orderId: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -48,7 +54,7 @@ export default {
         { text: 'Total', class: 'text-center medium' },
         { text: 'Status', class: 'text-center medium' },
         { text: 'Date', class: 'text-center medium' },
-        { text: 'User ID', class: 'text-center medium' }
+        { text: '', class: 'text-center medium' }
       ]
     };
   },

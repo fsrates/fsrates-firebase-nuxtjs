@@ -42,8 +42,11 @@ export default {
       alert(e);
     }
     return {
-      response,
-      orders: response.val()
+      orderId: response.key,
+      orders: {
+        id: response.key,
+        ...response.val()
+      }
     };
   },
 
